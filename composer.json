@@ -1,17 +1,17 @@
 {
-    "name": "kevinkoenen/laravel-bol-com-retailer",
+    "name": "homedesignshops/laravel-bol-com-retailer",
     "description": "Laravel Bol.com Retailer API package",
     "keywords": [
-        "kevinkoenen",
+        "home design shops",
         "laravel-bol-com-retailer"
     ],
-    "homepage": "https://github.com/kevinkoenen/laravel-bol-com-retailer",
+    "homepage": "https://github.com/homedesignshops/laravel-bol-com-retailer",
     "license": "MIT",
     "type": "library",
     "authors": [
         {
             "name": "Kevin Koenen",
-            "email": "k.koenen93@gmail.com",
+            "email": "kevin@homedesignshops.nl",
             "role": "Developer"
         }
     ],
@@ -25,12 +25,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Kevinkoenen\\LaravelBolComRetailer\\": "src"
+            "HomeDesignShops\\LaravelBolComRetailer\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Kevinkoenen\\LaravelBolComRetailer\\Tests\\": "tests"
+            "HomeDesignShops\\LaravelBolComRetailer\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -44,10 +44,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Kevinkoenen\\LaravelBolComRetailer\\LaravelBolComRetailerServiceProvider"
+                "HomeDesignShops\\LaravelBolComRetailer\\LaravelBolComRetailerServiceProvider"
             ],
             "aliases": {
-                "LaravelBolComRetailer": "Kevinkoenen\\LaravelBolComRetailer\\LaravelBolComRetailerFacade"
+                "LaravelBolComRetailer": "HomeDesignShops\\LaravelBolComRetailer\\LaravelBolComRetailerFacade"
             }
         }
     }
