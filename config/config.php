@@ -1,8 +1,27 @@
 <?php
 
-/*
- * You can place your custom package configuration in here.
- */
 return [
+
+    /*
+    |--------------------------------------------------------------------------
+    | Demo mode
+    |--------------------------------------------------------------------------
+    |
+    | This value determines the service to run in demo mode.
+    |
+    */
+    'use_demo_mode' => env('BOL_COM_USE_DEMO_MODE', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Authentication
+    |--------------------------------------------------------------------------
+    |
+    | The authentication uses a client id and client secret make use
+    | of this service.
+    |
+    */
+    'client_id' => env('BOL_COM_CLIENT_ID'),
+    'client_secret' => env('BOL_COM_CLIENT_ID'),
 
 ];

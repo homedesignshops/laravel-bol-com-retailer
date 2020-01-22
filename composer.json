@@ -48,10 +48,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "HomeDesignShops\\LaravelBolComRetailer\\LaravelBolComRetailerServiceProvider"
+                "HomeDesignShops\\LaravelBolComRetailer\\BolComRetailerServiceProvider"
             ],
             "aliases": {
-                "LaravelBolComRetailer": "HomeDesignShops\\LaravelBolComRetailer\\LaravelBolComRetailerFacade"
+                "BolComRetailer": "HomeDesignShops\\LaravelBolComRetailer\\Facades\\BolComRetailer"
             }
         }
     }
