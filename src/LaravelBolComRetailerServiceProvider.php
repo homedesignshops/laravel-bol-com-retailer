@@ -1,6 +1,6 @@
 <?php
 
-namespace Kevinkoenen\LaravelBolComRetailer;
+namespace HomeDesignShops\LaravelBolComRetailer;
 
 use Illuminate\Support\ServiceProvider;
 

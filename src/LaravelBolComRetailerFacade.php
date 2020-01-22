@@ -1,11 +1,11 @@
 <?php
 
-namespace Kevinkoenen\LaravelBolComRetailer;
+namespace HomeDesignShops\LaravelBolComRetailer;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Kevinkoenen\LaravelBolComRetailer\Skeleton\SkeletonClass
+ * @see \HomeDesignShops\LaravelBolComRetailer\Skeleton\SkeletonClass
  */
 class LaravelBolComRetailerFacade extends Facade
 {

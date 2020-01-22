@@ -1,9 +1,9 @@
 <?php
 
-namespace Kevinkoenen\LaravelBolComRetailer\Tests;
+namespace HomeDesignShops\LaravelBolComRetailer\Tests;
 
 use Orchestra\Testbench\TestCase;
-use Kevinkoenen\LaravelBolComRetailer\LaravelBolComRetailerServiceProvider;
+use HomeDesignShops\LaravelBolComRetailer\LaravelBolComRetailerServiceProvider;
 
 class ExampleTest extends TestCase
 {
@@ -12,7 +12,7 @@ class ExampleTest extends TestCase
     {
         return [LaravelBolComRetailerServiceProvider::class];
     }
-    
+
     /** @test */
     public function true_is_true()
     {
