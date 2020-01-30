@@ -24,4 +24,14 @@ return [
     'client_id' => env('BOL_COM_CLIENT_ID'),
     'client_secret' => env('BOL_COM_CLIENT_SECRET'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Max retries
+    |--------------------------------------------------------------------------
+    |
+    | The max retries for the Bol.com API.
+    |
+    */
+    'max_retries' => env('BOL_COM_MAX_RETRIES', 5)
+
 ];
