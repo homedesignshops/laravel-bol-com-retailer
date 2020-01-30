@@ -20,6 +20,12 @@ BOL_COM_DEMO_MODE=true
 BOL_COM_CLIENT_ID={CLIENT_ID_HERE}
 BOL_COM_CLIENT_SECRET={CLIENT_SECRET_HERE}
 ```
+
+Publish the config file
+```bash
+php artisan vendor:publish --provider="HomeDesignShops/LaravelBolComRetail/BolComRetailerServiceProvider" --tag="config"
+```
+
 You're ready to use this package
 
 ## Usage
