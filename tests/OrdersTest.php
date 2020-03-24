@@ -33,4 +33,17 @@ class OrdersTest extends TestCase
         $this->assertNotNull($order->customerDetails->billingDetails);
         $this->assertNotNull($order->customerDetails->shipmentDetails);
     }
+
+    /** @test */
+    public function it_should_get_an_order()
+    {
+        // Given the order from the api
+        /** @var Collection $orders */
+        $order = BolComRetailer::getOrder('1043946570');
+
+        $this->assertInstanceOf(\Picqer\BolRetailer\Order::class, $order);
+
+        $order = BolComRetailer::getOrder('123');
+        $this->assertNull($order);
+    }
 }

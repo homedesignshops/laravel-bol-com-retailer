@@ -72,6 +72,22 @@ class BolComRetailerService
     }
 
     /**
+     * Returns a Bol.com order.
+     * Null if order not found.
+     *
+     * @param string $orderId
+     * @return Order|null
+     */
+    public function getOrder(string $orderId)
+    {
+        try {
+            return Order::get($orderId);
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
      * Ships a order item
      *
      * @param OrderItem $orderItem
