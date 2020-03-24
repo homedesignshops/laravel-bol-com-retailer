@@ -35,6 +35,16 @@ You're ready to use this package
 $orders = BolComRetailer::getOpenOrders();
 ```
 
+### Get order
+``` php
+$order = BolComRetailer::getOrder($orderId);
+```
+
+### Ship order item
+``` php
+$processStatus = BolComRetailer::shipOrderItem(OrderItem $orderItem, Transport $transport);
+```
+
 ### Testing
 
 ``` bash
