@@ -17,27 +17,30 @@ class Transport
     public $trackingCode;
 
     /**
+     * @var string
+     */
+    public $shipmentReference;
+
+    /**
      * The key is de Bol.com shipment name.
      * The values will be mapped to the correct shipment name.
      *
      * @var array
      */
-    protected $transportCodes = [
-        'tnt' => [
-            'postnl',
-        ],
-        'gls' => []
-    ];
+    protected $transportCodes = [];
 
     /**
      * TransportItem constructor.
      * @param string $transporterCode
      * @param string $trackingCode
+     * @param string $shipmentReference
      */
-    public function __construct(string $transporterCode, string $trackingCode)
+    public function __construct(string $transporterCode, string $trackingCode, string $shipmentReference)
     {
         $this->transporterCode = $this->getCorrectTransportName($transporterCode);
         $this->trackingCode = $trackingCode;
+        $this->shipmentReference = $shipmentReference;
+        $this->transportCodes = config('bol-com-retailer.transport_codes');
     }
 
     /**
@@ -60,6 +63,6 @@ class Transport
             }
         }
 
-        return false;
+        return $name;
     }
 }
