@@ -2,11 +2,17 @@
 
 namespace HomeDesignShops\LaravelBolComRetailer;
 
+use HomeDesignShops\LaravelBolComRetailer\Models\Transport;
+use HomeDesignShops\LaravelBolComRetailer\Models\TransportData;
+use HomeDesignShops\LaravelBolComRetailer\Models\TransportItem;
 use Illuminate\Support\Collection;
 use Picqer\BolRetailer\Client as BolRetailerClient;
 use Picqer\BolRetailer\Exception\HttpException;
+use Picqer\BolRetailer\Model\OrderItem;
 use Picqer\BolRetailer\Model\ReducedOrder;
 use Picqer\BolRetailer\Order;
+use Picqer\BolRetailer\ProcessStatus;
+use Picqer\BolRetailer\Shipment;
 
 class BolComRetailerService
 {
@@ -59,6 +65,37 @@ class BolComRetailerService
 
             if($this->retriesCount <= $this->maxRetries) {
                 return $this->getOpenOrders();
+            }
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Ships a order item
+     *
+     * @param OrderItem $orderItem
+     * @param Transport $transport
+     * @return ProcessStatus
+     */
+    public function shipOrderItem(OrderItem $orderItem, Transport $transport): ProcessStatus
+    {
+        try {
+            return Shipment::create($orderItem, [
+                'transport' => [
+                    'transporterCode' => $transport->transporterCode,
+                    'trackAndTrace' => $transport->trackingCode
+                ]
+            ]);
+
+        } catch (HttpException $e) {
+            $this->retriesCount++;
+            $retryInSeconds = str_replace(['Too many requests, retry in ', ' seconds.'], '', $e->getDetail());
+
+            sleep( (int) $retryInSeconds );
+
+            if($this->retriesCount <= $this->maxRetries) {
+                return $this->shipOrderItem($orderItem, $transport);
             }
 
             throw $e;
