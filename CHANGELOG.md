@@ -2,6 +2,9 @@
 
 All notable changes to `laravel-bol-com-retailer` will be documented in this file
 
+## 1.4 - 2020-03-24
+- Added support for orderitem shipment
+
 ## 1.3 - 2020-01-29
 - Added max retries for the API service
 
