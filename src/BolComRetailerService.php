@@ -100,7 +100,7 @@ class BolComRetailerService
             return Shipment::create($orderItem, [
                 'transport' => [
                     'transporterCode' => $transport->transporterCode,
-                    'trackAndTrace' => $transport->trackingCode
+                    'trackAndTraceCode' => $transport->trackAndTraceCode
                 ]
             ]);
 

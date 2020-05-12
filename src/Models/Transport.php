@@ -14,7 +14,7 @@ class Transport
     /**
      * @var string
      */
-    public $trackingCode;
+    public $trackAndTraceCode;
 
     /**
      * @var string
@@ -37,32 +37,8 @@ class Transport
      */
     public function __construct(string $transporterCode, string $trackingCode, string $shipmentReference)
     {
-        $this->transporterCode = $this->getCorrectTransportName($transporterCode);
-        $this->trackingCode = $trackingCode;
+        $this->transporterCode = $transporterCode;
+        $this->trackAndTraceCode = $trackingCode;
         $this->shipmentReference = $shipmentReference;
-        $this->transportCodes = config('bol-com-retailer.transport_codes');
-    }
-
-    /**
-     * Returns the correct transport name.
-     *
-     * @param $name
-     * @return bool|int|string
-     */
-    protected function getCorrectTransportName($name)
-    {
-        $name = strtolower($name);
-
-        if(isset($this->shipmentMapping[$name])) {
-            return $name;
-        }
-
-        foreach ($this->transportCodes as $key => $shipments) {
-            if(in_array($name, $shipments, true)) {
-                return $key;
-            }
-        }
-
-        return $name;
     }
 }
