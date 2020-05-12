@@ -98,9 +98,10 @@ class BolComRetailerService
     {
         try {
             return Shipment::create($orderItem, [
+                'shipmentReference' => $transport->shipmentReference,
                 'transport' => [
                     'transporterCode' => $transport->transporterCode,
-                    'trackAndTraceCode' => $transport->trackAndTraceCode
+                    'trackAndTrace' => $transport->trackAndTraceCode
                 ]
             ]);
 
