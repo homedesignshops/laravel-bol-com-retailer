@@ -2,33 +2,16 @@
 
 namespace HomeDesignShops\LaravelBolComRetailer;
 
-use HomeDesignShops\LaravelBolComRetailer\Models\Transport;
 use HomeDesignShops\LaravelBolComRetailer\Models\TransportData;
 use HomeDesignShops\LaravelBolComRetailer\Models\TransportItem;
-use Illuminate\Support\Collection;
 use Picqer\BolRetailer\Client as BolRetailerClient;
-use Picqer\BolRetailer\Exception\HttpException;
-use Picqer\BolRetailer\Model\OrderItem;
-use Picqer\BolRetailer\Model\ReducedOrder;
-use Picqer\BolRetailer\Order;
-use Picqer\BolRetailer\ProcessStatus;
-use Picqer\BolRetailer\Shipment;
 
 class BolComRetailerService
 {
-
     /**
-     * Max retry counts for the API requests.
-     *
-     * @var int
+     * @var BolComRetailerClient
      */
-    protected $maxRetries;
-
-    /**
-     * Holds the retry counts.
-     * @var int
-     */
-    protected $retriesCount = 0;
+    protected $client;
 
     /**
      * BolComRetailer constructor.
@@ -41,82 +24,34 @@ class BolComRetailerService
             config('bol-com-retailer.client_secret')
         );
 
-        $this->maxRetries = config('bol-com-retailer.max_retries');
+        $this->client = new BolComRetailerClient();
     }
 
     /**
-     * Returns a collection of the open orders.
-     *
-     * @return Collection
+     * Reauthenticate if needed.
      */
-    public function getOpenOrders(): Collection
+    public function reauthenticateIfNeeded(): void
     {
-        try {
-            return collect(Order::all())
-                ->transform(static function (ReducedOrder $reducedOrder) {
-                    return Order::get($reducedOrder->orderId);
-                });
-
-        } catch (HttpException $e) {
-            $this->retriesCount++;
-            $retryInSeconds = str_replace(['Too many requests, retry in ', ' seconds.'], '', $e->getDetail());
-
-            sleep( (int) $retryInSeconds );
-
-            if($this->retriesCount <= $this->maxRetries) {
-                return $this->getOpenOrders();
-            }
-
-            throw $e;
+        if(BolRetailerClient::isAuthenticated() === false) {
+            BolRetailerClient::setCredentials(
+                config('bol-com-retailer.client_id'),
+                config('bol-com-retailer.client_secret')
+            );
         }
     }
 
     /**
-     * Returns a Bol.com order.
-     * Null if order not found.
+     * Redirect all calls to the client
      *
-     * @param string $orderId
-     * @return Order|null
+     * @param string $name Name of the method to call
+     * @param mixed $arguments Arguments of the method to call
+     * @return mixed
      */
-    public function getOrder(string $orderId)
+    public function __call($name, $arguments)
     {
-        try {
-            return Order::get($orderId);
-        } catch (\Exception $e) {
-            return null;
-        }
-    }
+        $this->reauthenticateIfNeeded();
 
-    /**
-     * Ships a order item
-     *
-     * @param OrderItem $orderItem
-     * @param Transport $transport
-     * @return ProcessStatus
-     */
-    public function shipOrderItem(OrderItem $orderItem, Transport $transport): ProcessStatus
-    {
-        try {
-            return Shipment::create($orderItem, [
-                'shipmentReference' => $transport->shipmentReference,
-                'transport' => [
-                    'transporterCode' => $transport->transporterCode,
-                    'trackAndTrace' => $transport->trackAndTraceCode
-                ]
-            ]);
-
-        } catch (HttpException $e) {
-            $this->retriesCount++;
-            $retryInSeconds = str_replace(['Too many requests, retry in ', ' seconds.'], '', $e->getDetail());
-
-            sleep( (int) $retryInSeconds );
-
-            if($this->retriesCount <= $this->maxRetries) {
-                return $this->shipOrderItem($orderItem, $transport);
-            }
-
-            throw $e;
-        }
+        return $this->client->$name(...$arguments);
     }
 
 }
