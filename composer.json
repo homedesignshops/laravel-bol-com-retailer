@@ -16,9 +16,9 @@
         }
     ],
     "require": {
-        "php": "^8.0",
+        "php": "^7.3|^8.0",
         "illuminate/support": "^8.0",
-        "picqer/bol-retailer-php-client": "^1.4"
+        "picqer/bol-retailer-php-client": "^v1.3.5"
     },
     "require-dev": {
         "orchestra/testbench": "^6.0",
