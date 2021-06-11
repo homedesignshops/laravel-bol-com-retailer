@@ -16,7 +16,7 @@ composer require homedesignshops/laravel-bol-com-retailer
 
 Configure the `.env` file
 ```dotenv
-BOL_COM_DEMO_MODE=true
+BOL_COM_USE_DEMO_MODE=true
 BOL_COM_CLIENT_ID={CLIENT_ID_HERE}
 BOL_COM_CLIENT_SECRET={CLIENT_SECRET_HERE}
 ```
