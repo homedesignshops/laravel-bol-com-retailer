@@ -54,7 +54,15 @@ class BolComRetailerServiceProvider extends ServiceProvider
 
         // Register the main class to use with the facade
         $this->app->singleton('bol-com-retailer', static function () {
-            return new BolComRetailerService;
+
+            $config = config('bol-com-retailer');
+
+            try {
+                return new BolComRetailerService($config['client_id'], $config['client_secret'], $config['use_demo_mode']);
+            } catch (\Exception $e) {
+                report($e);
+                return null;
+            }
         });
     }
 }

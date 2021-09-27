@@ -2,41 +2,85 @@
 
 namespace HomeDesignShops\LaravelBolComRetailer;
 
-use HomeDesignShops\LaravelBolComRetailer\Models\TransportData;
-use HomeDesignShops\LaravelBolComRetailer\Models\TransportItem;
+use Picqer\BolRetailer\Client;
 use Picqer\BolRetailer\Client as BolRetailerClient;
+use Picqer\BolRetailer\Exception\ConnectException;
+use Picqer\BolRetailer\Exception\Exception;
+use Picqer\BolRetailer\Exception\RateLimitException;
+use Picqer\BolRetailer\Exception\ResponseException;
+use Picqer\BolRetailer\Exception\UnauthorizedException;
 
 class BolComRetailerService
 {
     /**
+     * @var BolRetailerClient $bolClient
+     */
+    protected Client $bolClient;
+
+    /**
      * @var BolComRetailerClient
      */
-    protected $client;
+    protected BolComRetailerClient $client;
+
+    /**
+     * @var string $clientId The client id of the Bol.com API;
+     */
+    protected string $clientId;
+
+    /**
+     * @var string $clientSecret The client secret of the Bol.com API.
+     */
+    protected string $clientSecret;
 
     /**
      * BolComRetailer constructor.
+     * @throws ConnectException
+     * @throws UnauthorizedException
+     * @throws ResponseException
+     * @throws RateLimitException
+     * @throws \Exception
      */
-    public function __construct()
+    public function __construct($clientId, $clientSecret, $demoMode = true)
     {
-        BolRetailerClient::setDemoMode(config('bol-com-retailer.use_demo_mode'));
-        BolRetailerClient::setCredentials(
-            config('bol-com-retailer.client_id'),
-            config('bol-com-retailer.client_secret')
-        );
+        $this->clientId = $clientId;
+        $this->clientSecret = $clientSecret;
 
-        $this->client = new BolComRetailerClient();
+        $this->bolClient = new Client();
+
+        $this->bolClient->setDemoMode($demoMode === true);
+
+        $this->authenticate();
+
+        $this->client = new BolComRetailerClient($this->bolClient);
+    }
+
+    /**
+     * Authenticate to the Bol.com API.
+     *
+     * @throws Exception
+     * @throws ResponseException
+     * @throws RateLimitException
+     * @throws UnauthorizedException
+     * @throws ConnectException
+     */
+    protected function authenticate(): void
+    {
+        $this->bolClient->authenticate($this->clientId, $this->clientSecret);
     }
 
     /**
      * Reauthenticate if needed.
+     *
+     * @throws Exception
+     * @throws ResponseException
+     * @throws RateLimitException
+     * @throws UnauthorizedException
+     * @throws ConnectException
      */
     public function reauthenticateIfNeeded(): void
     {
-        if(BolRetailerClient::isAuthenticated() === false) {
-            BolRetailerClient::setCredentials(
-                config('bol-com-retailer.client_id'),
-                config('bol-com-retailer.client_secret')
-            );
+        if($this->bolClient->isAuthenticated() === false) {
+            $this->authenticate();
         }
     }
 
@@ -47,9 +91,13 @@ class BolComRetailerService
      * @param mixed $arguments Arguments of the method to call
      * @return mixed
      */
-    public function __call($name, $arguments)
+    public function __call(string $name, mixed $arguments)
     {
-        $this->reauthenticateIfNeeded();
+        try {
+            $this->reauthenticateIfNeeded();
+        } catch (\Exception $e) {
+            report($e);
+        }
 
         return $this->client->$name(...$arguments);
     }

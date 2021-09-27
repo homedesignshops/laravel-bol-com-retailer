@@ -18,7 +18,7 @@
     "require": {
         "php": "^8.0",
         "illuminate/support": "^8.0",
-        "picqer/bol-retailer-php-client": "^1.4"
+        "picqer/bol-retailer-php-client": "^5.0-dev"
     },
     "require-dev": {
         "orchestra/testbench": "^6.0",
@@ -51,11 +51,5 @@
                 "BolComRetailer": "HomeDesignShops\\LaravelBolComRetailer\\Facades\\BolComRetailer"
             }
         }
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/homedesignshops/bol-retailer-php-client"
-        }
-    ]
+    }
 }

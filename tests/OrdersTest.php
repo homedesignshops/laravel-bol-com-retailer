@@ -2,8 +2,8 @@
 
 namespace HomeDesignShops\LaravelBolComRetailer\Tests;
 
-use HomeDesignShops\LaravelBolComRetailer\Facades\BolComRetailer;
 use HomeDesignShops\LaravelBolComRetailer\BolComRetailerServiceProvider;
+use HomeDesignShops\LaravelBolComRetailer\Facades\BolComRetailer;
 use HomeDesignShops\LaravelBolComRetailer\Models\Transport;
 use Illuminate\Support\Collection;
 use Picqer\BolRetailer\Model\Order;
@@ -29,10 +29,9 @@ class OrdersTest extends TestCase
         // Assert that the orders contains an orderId, orderItems and customerDetails
         $this->assertNotNull($order->orderId);
         $this->assertNotNull($order->orderItems);
-        $this->assertTrue(count($order->orderItems) > 0);
-        $this->assertNotNull($order->customerDetails);
-        $this->assertNotNull($order->customerDetails->billingDetails);
-        $this->assertNotNull($order->customerDetails->shipmentDetails);
+        $this->assertNotEmpty($order->orderItems);
+        $this->assertNotNull($order->shipmentDetails);
+        $this->assertNotNull($order->billingDetails);
     }
 
     /** @test */
@@ -42,7 +41,7 @@ class OrdersTest extends TestCase
         /** @var Collection $orders */
         $order = BolComRetailer::getOrder('1043946570');
 
-        $this->assertInstanceOf(\Picqer\BolRetailer\Order::class, $order);
+        $this->assertInstanceOf(Order::class, $order);
 
         // Should return null if order not found
         $order = BolComRetailer::getOrder('123');
@@ -66,7 +65,7 @@ class OrdersTest extends TestCase
         $processStatus = BolComRetailer::shipOrderItem($orderItem, $transport);
 
         // Assert it is pending
-        $this->assertTrue($processStatus->isPending);
+        $this->assertSame($processStatus->status, 'PENDING');
 
         // And the event type is CONFIRM_SHIPMENT
         $this->assertSame('CONFIRM_SHIPMENT', $processStatus->eventType);
