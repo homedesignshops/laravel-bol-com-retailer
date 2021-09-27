@@ -4,52 +4,61 @@ namespace HomeDesignShops\LaravelBolComRetailer;
 
 use HomeDesignShops\LaravelBolComRetailer\Models\Transport;
 use Illuminate\Support\Collection;
-use Picqer\BolRetailer\Exception\HttpException;
-use Picqer\BolRetailer\Model\OrderItem;
+use Picqer\BolRetailer\Client;
+use Picqer\BolRetailer\Exception\RateLimitException;
+use Picqer\BolRetailer\Model\Order;
+use Picqer\BolRetailer\Model\OrderOrderItem;
+use Picqer\BolRetailer\Model\ProcessStatus;
 use Picqer\BolRetailer\Model\ReducedOrder;
-use Picqer\BolRetailer\Order;
-use Picqer\BolRetailer\ProcessStatus;
-use Picqer\BolRetailer\Shipment;
+use Picqer\BolRetailer\Model\ShipmentRequest;
+use Picqer\BolRetailer\Model\ShipmentTransport;
 
 class BolComRetailerClient
 {
+    /**
+     * @var Client
+     */
+    protected Client $client;
+
     /**
      * Max retry counts for the API requests.
      *
      * @var int
      */
-    protected $maxRetries;
+    protected int $maxRetries;
 
     /**
      * Holds the retry counts.
      * @var int
      */
-    protected $retriesCount = 0;
+    protected int $retriesCount = 0;
 
     /**
      * BolComRetailerClient constructor.
      */
-    public function __construct()
+    public function __construct(Client $client)
     {
+        $this->client = $client;
         $this->maxRetries = config('bol-com-retailer.max_retries');
     }
 
     /**
      * Returns a collection of the open orders.
      *
-     * @return Collection
+     * @return Collection|null
+     * @throws RateLimitException
      */
-    public function getOpenOrders(): Collection
+    public function getOpenOrders(): ?Collection
     {
         try {
-            return collect(Order::all())
-                ->transform(static function (ReducedOrder $reducedOrder) {
-                    return Order::get($reducedOrder->orderId);
+            return collect($this->client->getOrders()) // Client::getOrders()
+                ->transform(function (ReducedOrder $reducedOrder) {
+                    return $this->client->getOrder($reducedOrder->orderId);
                 });
 
-        } catch (HttpException $e) {
+        } catch (RateLimitException $e) {
             $this->retriesCount++;
-            $retryInSeconds = str_replace(['Too many requests, retry in ', ' seconds.'], '', $e->getDetail());
+            $retryInSeconds = str_replace(['Too many requests, retry in ', ' seconds.'], '', $e->getMessage());
 
             sleep( (int) $retryInSeconds );
 
@@ -58,6 +67,9 @@ class BolComRetailerClient
             }
 
             throw $e;
+        } catch (\Exception $e) {
+            report($e);
+            return null;
         }
     }
 
@@ -71,31 +83,35 @@ class BolComRetailerClient
     public function getOrder(string $orderId)
     {
         try {
-            return Order::get($orderId);
+            return $this->client->getOrder($orderId);
         } catch (\Exception $e) {
             return null;
         }
     }
 
     /**
-     * Ships a order item
+     * Ships an order item
      *
-     * @param OrderItem $orderItem
+     * @param OrderOrderItem $orderItem
      * @param Transport $transport
-     * @return ProcessStatus
+     * @return ProcessStatus|null
+     * @throws RateLimitException
      */
-    public function shipOrderItem(OrderItem $orderItem, Transport $transport): ProcessStatus
+    public function shipOrderItem(OrderOrderItem $orderItem, Transport $transport): ?ProcessStatus
     {
-        try {
-            return Shipment::create($orderItem, [
-                'shipmentReference' => $transport->shipmentReference,
-                'transport' => [
-                    'transporterCode' => $transport->transporterCode,
-                    'trackAndTrace' => $transport->trackAndTraceCode
-                ]
-            ]);
+        $shipmentRequest = new ShipmentRequest();
+        $shipmentRequest->addOrderItemId($orderItem->orderItemId);
 
-        } catch (HttpException $e) {
+        $shipmentTransport = new ShipmentTransport();
+        $shipmentTransport->transporterCode = $transport->transporterCode;
+        $shipmentTransport->trackAndTrace = $transport->trackAndTraceCode;
+
+        $shipmentRequest->transport = $shipmentTransport;
+
+        try {
+            return $this->client->shipOrderItem($shipmentRequest);
+
+        } catch (RateLimitException $e) {
             $this->retriesCount++;
             $retryInSeconds = str_replace(['Too many requests, retry in ', ' seconds.'], '', $e->getDetail());
 
@@ -106,6 +122,10 @@ class BolComRetailerClient
             }
 
             throw $e;
+        } catch (\Exception $e) {
+            report($e);
+
+            return null;
         }
     }
 }
