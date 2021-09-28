@@ -5,9 +5,9 @@ namespace HomeDesignShops\LaravelBolComRetailer\Facades;
 use HomeDesignShops\LaravelBolComRetailer\Models\Transport;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
+use Picqer\BolRetailer\Model\Order;
 use Picqer\BolRetailer\Model\OrderItem;
-use Picqer\BolRetailer\Order;
-use Picqer\BolRetailer\ProcessStatus;
+use Picqer\BolRetailer\Model\ProcessStatus;
 
 /**
  * @see \HomeDesignShops\LaravelBolComRetailer\BolComRetailerService
