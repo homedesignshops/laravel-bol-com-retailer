@@ -80,7 +80,7 @@ class BolComRetailerClient
      * @param string $orderId
      * @return Order|null
      */
-    public function getOrder(string $orderId)
+    public function getOrder(string $orderId): ?Order
     {
         try {
             return $this->client->getOrder($orderId);
