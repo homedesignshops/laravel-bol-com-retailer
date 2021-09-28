@@ -113,7 +113,7 @@ class BolComRetailerClient
 
         } catch (RateLimitException $e) {
             $this->retriesCount++;
-            $retryInSeconds = str_replace(['Too many requests, retry in ', ' seconds.'], '', $e->getDetail());
+            $retryInSeconds = str_replace(['Too many requests, retry in ', ' seconds.'], '', $e->getMessage());
 
             sleep( (int) $retryInSeconds );
 
