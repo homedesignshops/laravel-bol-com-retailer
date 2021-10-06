@@ -85,6 +85,7 @@ class BolComRetailerClient
         try {
             return $this->client->getOrder($orderId);
         } catch (\Exception $e) {
+            report($e);
             return null;
         }
     }
