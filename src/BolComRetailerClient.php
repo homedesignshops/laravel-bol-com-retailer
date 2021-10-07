@@ -102,6 +102,7 @@ class BolComRetailerClient
     {
         $shipmentRequest = new ShipmentRequest();
         $shipmentRequest->addOrderItemId($orderItem->orderItemId);
+        $shipmentRequest->shipmentReference = $transport->shipmentReference;
 
         $shipmentTransport = new ShipmentTransport();
         $shipmentTransport->transporterCode = $transport->transporterCode;
