@@ -6,7 +6,7 @@ use HomeDesignShops\LaravelBolComRetailer\BolComRetailerServiceProvider;
 use HomeDesignShops\LaravelBolComRetailer\Facades\BolComRetailer;
 use HomeDesignShops\LaravelBolComRetailer\Models\Transport;
 use Illuminate\Support\Collection;
-use Picqer\BolRetailer\Model\Order;
+use Picqer\BolRetailerV8\Model\Order;
 
 class OrdersTest extends TestCase
 {

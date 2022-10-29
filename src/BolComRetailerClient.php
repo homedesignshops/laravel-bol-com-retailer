@@ -4,14 +4,14 @@ namespace HomeDesignShops\LaravelBolComRetailer;
 
 use HomeDesignShops\LaravelBolComRetailer\Models\Transport;
 use Illuminate\Support\Collection;
-use Picqer\BolRetailer\Client;
-use Picqer\BolRetailer\Exception\RateLimitException;
-use Picqer\BolRetailer\Model\Order;
-use Picqer\BolRetailer\Model\OrderOrderItem;
-use Picqer\BolRetailer\Model\ProcessStatus;
-use Picqer\BolRetailer\Model\ReducedOrder;
-use Picqer\BolRetailer\Model\ShipmentRequest;
-use Picqer\BolRetailer\Model\ShipmentTransport;
+use Picqer\BolRetailerV8\Client;
+use Picqer\BolRetailerV8\Exception\RateLimitException;
+use Picqer\BolRetailerV8\Model\Order;
+use Picqer\BolRetailerV8\Model\OrderOrderItem;
+use Picqer\BolRetailerV8\Model\ProcessStatus;
+use Picqer\BolRetailerV8\Model\ReducedOrder;
+use Picqer\BolRetailerV8\Model\ShipmentRequest;
+use Picqer\BolRetailerV8\Model\ShipmentTransport;
 
 class BolComRetailerClient
 {
@@ -107,6 +107,8 @@ class BolComRetailerClient
         $shipmentTransport = new ShipmentTransport();
         $shipmentTransport->transporterCode = $transport->transporterCode;
         $shipmentTransport->trackAndTrace = $transport->trackAndTraceCode;
+
+        $shipmentTransport->transportEvents = null;
 
         $shipmentRequest->transport = $shipmentTransport;
 

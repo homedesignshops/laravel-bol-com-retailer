@@ -2,13 +2,13 @@
 
 namespace HomeDesignShops\LaravelBolComRetailer;
 
-use Picqer\BolRetailer\Client;
-use Picqer\BolRetailer\Client as BolRetailerClient;
-use Picqer\BolRetailer\Exception\ConnectException;
-use Picqer\BolRetailer\Exception\Exception;
-use Picqer\BolRetailer\Exception\RateLimitException;
-use Picqer\BolRetailer\Exception\ResponseException;
-use Picqer\BolRetailer\Exception\UnauthorizedException;
+use Picqer\BolRetailerV8\Client;
+use Picqer\BolRetailerV8\Client as BolRetailerClient;
+use Picqer\BolRetailerV8\Exception\ConnectException;
+use Picqer\BolRetailerV8\Exception\Exception;
+use Picqer\BolRetailerV8\Exception\RateLimitException;
+use Picqer\BolRetailerV8\Exception\ResponseException;
+use Picqer\BolRetailerV8\Exception\UnauthorizedException;
 
 class BolComRetailerService
 {
