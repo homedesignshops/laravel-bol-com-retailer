@@ -5,13 +5,19 @@ namespace HomeDesignShops\LaravelBolComRetailer;
 use HomeDesignShops\LaravelBolComRetailer\Models\Transport;
 use Illuminate\Support\Collection;
 use Picqer\BolRetailerV8\Client;
+use Picqer\BolRetailerV8\Exception\ConnectException;
+use Picqer\BolRetailerV8\Exception\Exception;
 use Picqer\BolRetailerV8\Exception\RateLimitException;
+use Picqer\BolRetailerV8\Exception\ResponseException;
+use Picqer\BolRetailerV8\Exception\UnauthorizedException;
 use Picqer\BolRetailerV8\Model\Order;
 use Picqer\BolRetailerV8\Model\OrderOrderItem;
 use Picqer\BolRetailerV8\Model\ProcessStatus;
 use Picqer\BolRetailerV8\Model\ReducedOrder;
+use Picqer\BolRetailerV8\Model\RetailerOffer;
 use Picqer\BolRetailerV8\Model\ShipmentRequest;
 use Picqer\BolRetailerV8\Model\ShipmentTransport;
+use Picqer\BolRetailerV8\Model\UpdateOfferRequest;
 
 class BolComRetailerClient
 {
@@ -129,6 +135,41 @@ class BolComRetailerClient
         } catch (\Exception $e) {
             report($e);
 
+            return null;
+        }
+    }
+
+    /**
+     * @param string $offerId
+     * @return RetailerOffer|null
+     */
+    public function getOffer(string $offerId): ?RetailerOffer
+    {
+        try {
+            return $this->client->getOffer($offerId);
+        } catch (\Exception $exception) {
+            report($exception);
+            return null;
+        }
+    }
+
+    /**
+     * @param RetailerOffer $offer
+     * @return ProcessStatus|null
+     */
+    public function updateOffer(RetailerOffer $offer): ?ProcessStatus
+    {
+        $updateOfferRequest = new UpdateOfferRequest();
+        $updateOfferRequest->onHoldByRetailer = $offer->onHoldByRetailer;
+        $updateOfferRequest->fulfilment = $offer->fulfilment;
+
+        try {
+            return $this->client->putOffer(
+                $offer->offerId,
+                $updateOfferRequest
+            );
+        } catch (\Exception $exception) {
+            report($exception);
             return null;
         }
     }
