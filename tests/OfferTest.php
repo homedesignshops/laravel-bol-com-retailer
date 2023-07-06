@@ -48,4 +48,22 @@ class OfferTest extends TestCase
         $this->assertSame($processStatus->eventType, 'UPDATE_OFFER');
         $this->assertSame($processStatus->entityId, $offer->offerId);
     }
+
+    /**
+     * @test
+     */
+    public function it_should_update_an_offer_stock()
+    {
+        // Given we have an offer
+        $offer = BolComRetailer::getOffer('13722de8-8182-d161-5422-4a0a1caab5c8');
+
+        // When we update the offer's stock
+        $processStatus = BolComRetailer::updateOfferStock($offer, 10);
+
+        // Then we expect a process status object back,
+        // and it's pending
+        $this->assertSame($processStatus->status, 'PENDING');
+        $this->assertSame($processStatus->eventType, 'UPDATE_OFFER_STOCK');
+        $this->assertSame($processStatus->entityId, $offer->offerId);
+    }
 }

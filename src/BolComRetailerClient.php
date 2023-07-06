@@ -18,6 +18,7 @@ use Picqer\BolRetailerV8\Model\RetailerOffer;
 use Picqer\BolRetailerV8\Model\ShipmentRequest;
 use Picqer\BolRetailerV8\Model\ShipmentTransport;
 use Picqer\BolRetailerV8\Model\UpdateOfferRequest;
+use Picqer\BolRetailerV8\Model\UpdateOfferStockRequest;
 
 class BolComRetailerClient
 {
@@ -165,6 +166,28 @@ class BolComRetailerClient
 
         try {
             return $this->client->putOffer(
+                $offer->offerId,
+                $updateOfferRequest
+            );
+        } catch (\Exception $exception) {
+            report($exception);
+            return null;
+        }
+    }
+
+    /**
+     * @param RetailerOffer $offer
+     * @param int $stock
+     * @return ProcessStatus|null
+     */
+    public function updateOfferStock(RetailerOffer $offer, int $stock): ?ProcessStatus
+    {
+        $updateOfferRequest = new UpdateOfferStockRequest();
+        $updateOfferRequest->amount = $stock;
+        $updateOfferRequest->managedByRetailer = false;
+
+        try {
+            return $this->client->updateOfferStock(
                 $offer->offerId,
                 $updateOfferRequest
             );
