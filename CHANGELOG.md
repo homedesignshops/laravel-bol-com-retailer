@@ -2,6 +2,9 @@
 
 All notable changes to `laravel-bol-com-retailer` will be documented in this file
 
+## 1.6 - 2023-07-07
+- Added updateOfferStock
+
 ## 1.6 - 2020-03-24
 - Updated config with transport_codes
 
