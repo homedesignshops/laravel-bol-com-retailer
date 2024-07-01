@@ -2,6 +2,9 @@
 
 All notable changes to `laravel-bol-com-retailer` will be documented in this file
 
+## 1.7 - 2024-07-01
+- Refactored updateOfferStock to use `managedByRetailer`
+
 ## 1.6 - 2023-07-07
 - Added updateOfferStock
 

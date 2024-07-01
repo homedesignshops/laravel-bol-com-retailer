@@ -180,11 +180,11 @@ class BolComRetailerClient
      * @param int $stock
      * @return ProcessStatus|null
      */
-    public function updateOfferStock(RetailerOffer $offer, int $stock): ?ProcessStatus
+    public function updateOfferStock(RetailerOffer $offer, int $stock, bool $managedByRetailer = false): ?ProcessStatus
     {
         $updateOfferRequest = new UpdateOfferStockRequest();
         $updateOfferRequest->amount = $stock;
-        $updateOfferRequest->managedByRetailer = false;
+        $updateOfferRequest->managedByRetailer = $managedByRetailer;
 
         try {
             return $this->client->updateOfferStock(

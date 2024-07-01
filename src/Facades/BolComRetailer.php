@@ -18,7 +18,7 @@ use Picqer\BolRetailerV8\Model\RetailerOffer;
  * @method static Order|null getOrder(string $orderId)
  * @method static RetailerOffer|null getOffer(string $offerId)
  * @method static ProcessStatus|null updateOffer(RetailerOffer $offer)
- * @method static ProcessStatus|null updateOfferStock(RetailerOffer $offer, int $stock)
+ * @method static ProcessStatus|null updateOfferStock(RetailerOffer $offer, int $stock, bool $managedByRetailer = false)
  */
 class BolComRetailer extends Facade
 {
