@@ -48,45 +48,65 @@ class BolService
     public function loadFromConfig(BolConfig $config): void
     {
         collect($config::loadRetailersFromConfig())->filter()->each(
-            function (array $retailerConfig, string $retailerName) {
+            function (array $retailerConfig) {
                 $bolComRetailerClient = new BolComRetailerClient(new Client(), $retailerConfig['max_retries']);
 
                 $retailer = new BolComRetailerService($bolComRetailerClient);
                 $retailer->setCredentials($retailerConfig['client_id'], $retailerConfig['client_secret']);
                 $retailer->setDemoMode($retailerConfig['use_demo_mode']);
 
-                $this->addRetailer($retailerName, $retailer);
+                $this->addRetailer($retailerConfig['code'], $retailer);
             });
     }
 
     /**
+     * Bij het verzenden van een order weten we niet bij welke retailer de order hoort.
+     * Daarom kan de retailer code optioneel worden meegegeven.
      * @throws \Throwable
      */
-    public function findOrder(string $orderId, string $code = null): Order
+    public function findOrder(string $orderId, string $retailerCode = null): \HomeDesignShops\LaravelBolComRetailer\Models\Order
     {
-        $retailers = $code ? [$this->retailer($code)] : $this->retailers;
+        $bolOrder = $retailerCode ?
+            $this->findOrderForRetailer($orderId, $retailerCode) :
+            $this->findOrderForAllRetailers($orderId);
 
+        throw_if(empty($bolOrder), new \Exception("Order {$orderId} not found"));
+
+        return new \HomeDesignShops\LaravelBolComRetailer\Models\Order($retailerCode, $bolOrder->toArray(false));
+    }
+
+    protected function findOrderForRetailer(string $orderId, string $retailerCode): ?Order
+    {
+        return $this->retailer($retailerCode)->getOrder($orderId);
+    }
+
+    protected function findOrderForAllRetailers(string $orderId): ?Order
+    {
         $order = null;
-        foreach ($retailers as $retailer) {
+        foreach ($this->retailers as $code => $retailer) {
             $order = $retailer->getOrder($orderId);
-            if (!empty($order)) {
-                break;
+            if (empty($order)) {
+                continue;
             }
         }
-
-        throw_unless($order, new \Exception("Order $orderId not found"));
 
         return $order;
     }
 
     /**
-     * @return Order[]
+     * @return \HomeDesignShops\LaravelBolComRetailer\Models\Order[]
      */
     public function openOrders(): array
     {
         $orders = [];
-        foreach ($this->retailers as $retailer) {
-            $orders = array_merge($orders, $retailer->getOpenOrders()->toArray());
+
+        foreach ($this->retailers as $code => $retailer) {
+            $orders = array_merge(
+                $orders,
+                $retailer->getOpenOrders()
+                    ->transform(fn(Order $order) => new \HomeDesignShops\LaravelBolComRetailer\Models\Order($code, $order->toArray(false)))
+                    ->toArray()
+            );
         }
 
         return $orders;

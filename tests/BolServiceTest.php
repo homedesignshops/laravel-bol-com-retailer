@@ -54,7 +54,7 @@ class BolServiceTest extends TestCase
 
         $bolService->loadFromConfig(new BolConfig());
 
-        $order = $bolService->findOrder('1043946570');
+        $order = $bolService->findOrder('1043946570', array_key_first($bolService->retailers()));
 
         $this->assertInstanceOf(Order::class, $order);
     }
@@ -70,6 +70,24 @@ class BolServiceTest extends TestCase
 
         $bolService->loadFromConfig(new BolConfig());
 
-        $bolService->findOrder('1234567890abcdef');
+        $bolService->findOrder('1234567890abcdef', array_key_first($bolService->retailers()));
+    }
+
+    /** @test */
+    public function it_find_open_orders()
+    {
+        // Given
+        $bolService = new BolService();
+
+        $bolService->loadFromConfig(new BolConfig());
+
+        // When
+        $orders = $bolService->openOrders();
+
+        // Then
+        $this->assertIsArray($orders);
+        foreach ($orders as $order) {
+            $this->assertInstanceOf(\HomeDesignShops\LaravelBolComRetailer\Models\Order::class, $order);
+        }
     }
 }
