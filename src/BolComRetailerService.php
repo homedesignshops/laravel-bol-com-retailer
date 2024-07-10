@@ -2,21 +2,29 @@
 
 namespace HomeDesignShops\LaravelBolComRetailer;
 
-use Picqer\BolRetailerV8\Client;
-use Picqer\BolRetailerV8\Client as BolRetailerClient;
+use HomeDesignShops\LaravelBolComRetailer\Models\Transport;
+use Illuminate\Support\Collection;
 use Picqer\BolRetailerV8\Exception\ConnectException;
 use Picqer\BolRetailerV8\Exception\Exception;
 use Picqer\BolRetailerV8\Exception\RateLimitException;
 use Picqer\BolRetailerV8\Exception\ResponseException;
 use Picqer\BolRetailerV8\Exception\UnauthorizedException;
+use Picqer\BolRetailerV8\Model\Order;
+use Picqer\BolRetailerV8\Model\OrderOrderItem;
+use Picqer\BolRetailerV8\Model\ProcessStatus;
+use Picqer\BolRetailerV8\Model\RetailerOffer;
+
+/**
+ * @method static Collection getOpenOrders()
+ * @method static ProcessStatus shipOrderItem(OrderOrderItem $orderItem, Transport $transport)
+ * @method static Order|null getOrder(string $orderId)
+ * @method static RetailerOffer|null getOffer(string $offerId)
+ * @method static ProcessStatus|null updateOffer(RetailerOffer $offer)
+ * @method static ProcessStatus|null updateOfferStock(RetailerOffer $offer, int $stock, bool $managedByRetailer = false)
+ */
 
 class BolComRetailerService
 {
-    /**
-     * @var BolRetailerClient $bolClient
-     */
-    protected Client $bolClient;
-
     /**
      * @var BolComRetailerClient
      */
@@ -34,24 +42,21 @@ class BolComRetailerService
 
     /**
      * BolComRetailer constructor.
-     * @throws ConnectException
-     * @throws UnauthorizedException
-     * @throws ResponseException
-     * @throws RateLimitException
-     * @throws \Exception
      */
-    public function __construct($clientId, $clientSecret, $demoMode = true)
+    public function __construct(BolComRetailerClient $client)
+    {
+        $this->client = $client;
+    }
+
+    public function setCredentials(string $clientId, string $clientSecret): void
     {
         $this->clientId = $clientId;
         $this->clientSecret = $clientSecret;
+    }
 
-        $this->bolClient = new Client();
-
-        $this->bolClient->setDemoMode($demoMode === true);
-
-        $this->authenticate();
-
-        $this->client = new BolComRetailerClient($this->bolClient);
+    public function setDemoMode(bool $enabled): void
+    {
+        $this->client->setDemoMode($enabled);
     }
 
     /**
@@ -65,7 +70,7 @@ class BolComRetailerService
      */
     protected function authenticate(): void
     {
-        $this->bolClient->authenticate($this->clientId, $this->clientSecret);
+        $this->client->authenticateByClientCredentials($this->clientId, $this->clientSecret);
     }
 
     /**
@@ -79,7 +84,7 @@ class BolComRetailerService
      */
     public function reauthenticateIfNeeded(): void
     {
-        if($this->bolClient->isAuthenticated() === false) {
+        if($this->client->isAuthenticated() === false) {
             $this->authenticate();
         }
     }

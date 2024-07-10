@@ -25,7 +25,7 @@ class BolComRetailerClient
     /**
      * @var Client
      */
-    protected Client $client;
+    public Client $bolClient;
 
     /**
      * Max retry counts for the API requests.
@@ -43,10 +43,10 @@ class BolComRetailerClient
     /**
      * BolComRetailerClient constructor.
      */
-    public function __construct(Client $client)
+    public function __construct(Client $client, int $maxRetries = 5)
     {
-        $this->client = $client;
-        $this->maxRetries = config('bol-com-retailer.max_retries');
+        $this->bolClient = $client;
+        $this->maxRetries = $maxRetries;
     }
 
     /**
@@ -58,9 +58,9 @@ class BolComRetailerClient
     public function getOpenOrders(): ?Collection
     {
         try {
-            return collect($this->client->getOrders()) // Client::getOrders()
+            return collect($this->bolClient->getOrders()) // Client::getOrders()
                 ->transform(function (ReducedOrder $reducedOrder) {
-                    return $this->client->getOrder($reducedOrder->orderId);
+                    return $this->bolClient->getOrder($reducedOrder->orderId);
                 });
 
         } catch (RateLimitException $e) {
@@ -90,7 +90,7 @@ class BolComRetailerClient
     public function getOrder(string $orderId): ?Order
     {
         try {
-            return $this->client->getOrder($orderId);
+            return $this->bolClient->getOrder($orderId);
         } catch (\Exception $e) {
             report($e);
             return null;
@@ -120,7 +120,7 @@ class BolComRetailerClient
         $shipmentRequest->transport = $shipmentTransport;
 
         try {
-            return $this->client->shipOrderItem($shipmentRequest);
+            return $this->bolClient->shipOrderItem($shipmentRequest);
 
         } catch (RateLimitException $e) {
             $this->retriesCount++;
@@ -147,7 +147,7 @@ class BolComRetailerClient
     public function getOffer(string $offerId): ?RetailerOffer
     {
         try {
-            return $this->client->getOffer($offerId);
+            return $this->bolClient->getOffer($offerId);
         } catch (\Exception $exception) {
             report($exception);
             return null;
@@ -165,7 +165,7 @@ class BolComRetailerClient
         $updateOfferRequest->fulfilment = $offer->fulfilment;
 
         try {
-            return $this->client->putOffer(
+            return $this->bolClient->putOffer(
                 $offer->offerId,
                 $updateOfferRequest
             );
@@ -187,7 +187,7 @@ class BolComRetailerClient
         $updateOfferRequest->managedByRetailer = $managedByRetailer;
 
         try {
-            return $this->client->updateOfferStock(
+            return $this->bolClient->updateOfferStock(
                 $offer->offerId,
                 $updateOfferRequest
             );
@@ -195,5 +195,30 @@ class BolComRetailerClient
             report($exception);
             return null;
         }
+    }
+
+    /**
+     * @throws ResponseException
+     * @throws UnauthorizedException
+     * @throws Exception
+     * @throws ConnectException
+     * @throws RateLimitException
+     */
+    public function authenticateByClientCredentials(string $clientId, string $clientSecret): void
+    {
+        $this->bolClient->authenticateByClientCredentials($clientId, $clientSecret);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAuthenticated(): bool
+    {
+        return $this->bolClient->isAuthenticated();
+    }
+
+    public function setDemoMode(bool $enabled): void
+    {
+        $this->bolClient->setDemoMode($enabled);
     }
 }

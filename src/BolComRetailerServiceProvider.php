@@ -2,7 +2,9 @@
 
 namespace HomeDesignShops\LaravelBolComRetailer;
 
+use HomeDesignShops\LaravelBolComRetailer\Facades\Bol;
 use Illuminate\Support\ServiceProvider;
+use Picqer\BolRetailerV8\Client;
 
 class BolComRetailerServiceProvider extends ServiceProvider
 {
@@ -21,7 +23,7 @@ class BolComRetailerServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/config.php' => config_path('bol-com-retailer.php'),
+                __DIR__.'/../config/config.php' => config_path('bol.php'),
             ], 'config');
 
             // Publishing the views.
@@ -47,22 +49,17 @@ class BolComRetailerServiceProvider extends ServiceProvider
     /**
      * Register the application services.
      */
-    public function register()
+    public function register(): void
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'bol-com-retailer');
+        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'bol');
 
-        // Register the main class to use with the facade
-        $this->app->singleton('bol-com-retailer', static function () {
+        $this->app->singleton(Bol::class, function() {
+            $bolService = new BolService();
 
-            $config = config('bol-com-retailer');
+            $bolService->loadFromConfig(config('bol'));
 
-            try {
-                return new BolComRetailerService($config['client_id'], $config['client_secret'], $config['use_demo_mode']);
-            } catch (\Exception $e) {
-                report($e);
-                return null;
-            }
+            return $bolService;
         });
     }
 }

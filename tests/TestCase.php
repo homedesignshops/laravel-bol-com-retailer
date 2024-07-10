@@ -7,7 +7,7 @@ use Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables;
 
 abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
-    protected function getEnvironmentSetUp($app)
+    protected function getEnvironmentSetUp($app): void
     {
         // make sure, our .env file is loaded
         $app->useEnvironmentPath(__DIR__ . '/..');
@@ -16,9 +16,8 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
         parent::getEnvironmentSetUp($app);
     }
 
-    protected function setupConfig(Application $app)
+    protected function setupConfig(Application $app): void
     {
-        $app['config']->set('bol-com-retailer.client_id', getenv('BOL_COM_CLIENT_ID'));
-        $app['config']->set('bol-com-retailer.client_secret', getenv('BOL_COM_CLIENT_SECRET'));
+        $app['config']->set('bol', include(__DIR__ . '/../config/config.php'));
     }
 }
