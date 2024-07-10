@@ -7,6 +7,7 @@ use HomeDesignShops\LaravelBolComRetailer\BolComRetailerService;
 use HomeDesignShops\LaravelBolComRetailer\BolConfig;
 use HomeDesignShops\LaravelBolComRetailer\BolService;
 use Picqer\BolRetailerV8\Client;
+use Picqer\BolRetailerV8\Model\Order;
 
 class BolServiceTest extends TestCase
 {
@@ -40,6 +41,35 @@ class BolServiceTest extends TestCase
 
         $bolService->loadFromConfig(new BolConfig());
 
-        $this->assertCount(2, $bolService->retailers());
+        $this->assertCount(1, $bolService->retailers());
+    }
+
+    /**
+     * @test
+     * TODO: Fake the Order
+     */
+    public function it_find_an_order()
+    {
+        $bolService = new BolService();
+
+        $bolService->loadFromConfig(new BolConfig());
+
+        $order = $bolService->findOrder('1043946570');
+
+        $this->assertInstanceOf(Order::class, $order);
+    }
+
+    /**
+     * @test
+     */
+    public function it_throws_an_exception_if_order_not_found()
+    {
+        $this->expectException(\Exception::class);
+
+        $bolService = new BolService();
+
+        $bolService->loadFromConfig(new BolConfig());
+
+        $bolService->findOrder('1234567890abcdef');
     }
 }

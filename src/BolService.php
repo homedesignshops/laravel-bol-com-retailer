@@ -3,6 +3,7 @@
 namespace HomeDesignShops\LaravelBolComRetailer;
 
 use Picqer\BolRetailerV8\Client;
+use Picqer\BolRetailerV8\Model\Order;
 
 class BolService
 {
@@ -56,5 +57,38 @@ class BolService
 
                 $this->addRetailer($retailerName, $retailer);
             });
+    }
+
+    /**
+     * @throws \Throwable
+     */
+    public function findOrder(string $orderId, string $code = null): Order
+    {
+        $retailers = $code ? [$this->retailer($code)] : $this->retailers;
+
+        $order = null;
+        foreach ($retailers as $retailer) {
+            $order = $retailer->getOrder($orderId);
+            if (!empty($order)) {
+                break;
+            }
+        }
+
+        throw_unless($order, new \Exception("Order $orderId not found"));
+
+        return $order;
+    }
+
+    /**
+     * @return Order[]
+     */
+    public function openOrders(): array
+    {
+        $orders = [];
+        foreach ($this->retailers as $retailer) {
+            $orders = array_merge($orders, $retailer->getOpenOrders()->toArray());
+        }
+
+        return $orders;
     }
 }
