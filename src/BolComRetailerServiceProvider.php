@@ -57,7 +57,7 @@ class BolComRetailerServiceProvider extends ServiceProvider
         $this->app->singleton(Bol::class, function() {
             $bolService = new BolService();
 
-            $bolService->loadFromConfig(config('bol'));
+            $bolService->loadFromConfig(new BolConfig());
 
             return $bolService;
         });

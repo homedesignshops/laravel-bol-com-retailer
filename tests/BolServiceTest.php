@@ -4,6 +4,7 @@ namespace HomeDesignShops\LaravelBolComRetailer\Tests;
 
 use HomeDesignShops\LaravelBolComRetailer\BolComRetailerClient;
 use HomeDesignShops\LaravelBolComRetailer\BolComRetailerService;
+use HomeDesignShops\LaravelBolComRetailer\BolConfig;
 use HomeDesignShops\LaravelBolComRetailer\BolService;
 use Picqer\BolRetailerV8\Client;
 
@@ -28,5 +29,17 @@ class BolServiceTest extends TestCase
 
         $this->assertCount(1, $bolService->retailers());
         $this->assertSame($retailer, $bolService->retailer('test-retailer'));
+    }
+
+    /**
+     * @test
+     */
+    public function it_loads_from_a_config_file()
+    {
+        $bolService = new BolService();
+
+        $bolService->loadFromConfig(new BolConfig());
+
+        $this->assertCount(2, $bolService->retailers());
     }
 }

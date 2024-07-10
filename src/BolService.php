@@ -41,14 +41,14 @@ class BolService
     }
 
     /**
-     * @param array $config
+     * @param BolConfig $config
      * @return void
      */
-    public function loadFromConfig(array $config): void
+    public function loadFromConfig(BolConfig $config): void
     {
-        collect($config['retailers'])->filter()->each(
-            function (array $retailerConfig, string $retailerName) use ($config) {
-                $bolComRetailerClient = new BolComRetailerClient(new Client(), $config['max_retries']);
+        collect($config::loadRetailersFromConfig())->filter()->each(
+            function (array $retailerConfig, string $retailerName) {
+                $bolComRetailerClient = new BolComRetailerClient(new Client(), $retailerConfig['max_retries']);
 
                 $retailer = new BolComRetailerService($bolComRetailerClient);
                 $retailer->setCredentials($retailerConfig['client_id'], $retailerConfig['client_secret']);
