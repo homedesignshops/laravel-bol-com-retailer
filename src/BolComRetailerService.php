@@ -15,12 +15,12 @@ use Picqer\BolRetailerV8\Model\ProcessStatus;
 use Picqer\BolRetailerV8\Model\RetailerOffer;
 
 /**
- * @method static Collection getOpenOrders()
- * @method static ProcessStatus shipOrderItem(OrderOrderItem $orderItem, Transport $transport)
- * @method static Order|null getOrder(string $orderId)
- * @method static RetailerOffer|null getOffer(string $offerId)
- * @method static ProcessStatus|null updateOffer(RetailerOffer $offer)
- * @method static ProcessStatus|null updateOfferStock(RetailerOffer $offer, int $stock, bool $managedByRetailer = false)
+ * @method Collection getOpenOrders()
+ * @method ProcessStatus shipOrderItem(OrderOrderItem $orderItem, Transport $transport)
+ * @method Order|null getOrder(string $orderId)
+ * @method RetailerOffer|null getOffer(string $offerId)
+ * @method ProcessStatus|null updateOffer(RetailerOffer $offer)
+ * @method ProcessStatus|null updateOfferStock(RetailerOffer $offer, int $stock, bool $managedByRetailer = false)
  */
 
 class BolComRetailerService
