@@ -9,10 +9,10 @@ use Picqer\BolRetailerV8\Model\Order;
 
 
 /**
- * @method BolComRetailerService[] retailers()
- * @method BolComRetailerService retailer(string $code)
- * @method Order[] openOrders()
- * @method Order findOrder(string $orderId, string $code = null)
+ * @method static BolComRetailerService[] retailers()
+ * @method static BolComRetailerService retailer(string $code)
+ * @method static Order[] openOrders()
+ * @method static Order findOrder(string $orderId, string $code = null)
  */
 class Bol extends Facade
 {
