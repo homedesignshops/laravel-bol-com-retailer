@@ -66,9 +66,13 @@ class BolService
      */
     public function findOrder(string $orderId, string $retailerCode = null): \HomeDesignShops\LaravelBolComRetailer\Models\Order
     {
-        $bolOrder = $retailerCode ?
-            $this->findOrderForRetailer($orderId, $retailerCode) :
-            $this->findOrderForAllRetailers($orderId);
+        if($retailerCode) {
+            $bolOrder = $this->findOrderForRetailer($orderId, $retailerCode);
+        } else {
+            $bolOrderData = $this->findOrderForAllRetailers($orderId);
+            $bolOrder = $bolOrderData['order'];
+            $retailerCode = $bolOrderData['retailerCode'];
+        }
 
         throw_if(empty($bolOrder), new \Exception("Order {$orderId} not found"));
 
