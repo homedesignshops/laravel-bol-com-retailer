@@ -84,17 +84,26 @@ class BolService
         return $this->retailer($retailerCode)->getOrder($orderId);
     }
 
-    protected function findOrderForAllRetailers(string $orderId): ?Order
+    protected function findOrderForAllRetailers(string $orderId): ?array
     {
         $order = null;
+        $retailerCode = null;
         foreach ($this->retailers as $code => $retailer) {
+            $retailerCode = $code;
             $order = $retailer->getOrder($orderId);
             if (empty($order)) {
                 continue;
             }
         }
 
-        return $order;
+        if(!$order) {
+            return null;
+        }
+
+        return [
+            'order' => $order,
+            'retailerCode' => $retailerCode,
+        ];
     }
 
     /**
