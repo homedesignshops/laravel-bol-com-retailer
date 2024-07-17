@@ -91,8 +91,8 @@ class BolService
         foreach ($this->retailers as $code => $retailer) {
             $retailerCode = $code;
             $order = $retailer->getOrder($orderId);
-            if (empty($order)) {
-                continue;
+            if ($order) {
+                break;
             }
         }
 
