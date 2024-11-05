@@ -100,7 +100,7 @@ class BolComRetailerClient
     /**
      * Ships an order item
      *
-     * @param OrderOrderItem $orderItem
+     * @param OrderItem $orderItem
      * @param Transport $transport
      * @return ProcessStatus|null
      * @throws RateLimitException
