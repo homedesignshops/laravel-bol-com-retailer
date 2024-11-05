@@ -5,7 +5,7 @@ namespace HomeDesignShops\LaravelBolComRetailer\Facades;
 use HomeDesignShops\LaravelBolComRetailer\BolComRetailerService;
 use HomeDesignShops\LaravelBolComRetailer\BolService;
 use Illuminate\Support\Facades\Facade;
-use Picqer\BolRetailerV8\Model\Order;
+use Picqer\BolRetailerV10\Model\Order;
 
 
 /**

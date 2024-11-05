@@ -2,7 +2,7 @@
 
 namespace HomeDesignShops\LaravelBolComRetailer\Models;
 
-class Order extends \Picqer\BolRetailerV8\Model\Order
+class Order extends \Picqer\BolRetailerV10\Model\Order
 {
     public string $retailerCode;
 

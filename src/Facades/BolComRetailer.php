@@ -5,10 +5,10 @@ namespace HomeDesignShops\LaravelBolComRetailer\Facades;
 use HomeDesignShops\LaravelBolComRetailer\Models\Transport;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
-use Picqer\BolRetailerV8\Model\Order;
-use Picqer\BolRetailerV8\Model\OrderOrderItem;
-use Picqer\BolRetailerV8\Model\ProcessStatus;
-use Picqer\BolRetailerV8\Model\RetailerOffer;
+use Picqer\BolRetailerV10\Model\Order;
+use Picqer\BolRetailerV10\Model\OrderOrderItem;
+use Picqer\BolRetailerV10\Model\ProcessStatus;
+use Picqer\BolRetailerV10\Model\RetailerOffer;
 
 /**
  * @see \HomeDesignShops\LaravelBolComRetailer\BolComRetailerService

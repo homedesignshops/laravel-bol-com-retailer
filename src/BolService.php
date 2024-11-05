@@ -2,8 +2,8 @@
 
 namespace HomeDesignShops\LaravelBolComRetailer;
 
-use Picqer\BolRetailerV8\Client;
-use Picqer\BolRetailerV8\Model\Order;
+use Picqer\BolRetailerV10\Client;
+use Picqer\BolRetailerV10\Model\Order;
 
 class BolService
 {

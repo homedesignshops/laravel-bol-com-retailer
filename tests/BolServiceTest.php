@@ -6,8 +6,8 @@ use HomeDesignShops\LaravelBolComRetailer\BolComRetailerClient;
 use HomeDesignShops\LaravelBolComRetailer\BolComRetailerService;
 use HomeDesignShops\LaravelBolComRetailer\BolConfig;
 use HomeDesignShops\LaravelBolComRetailer\BolService;
-use Picqer\BolRetailerV8\Client;
-use Picqer\BolRetailerV8\Model\Order;
+use Picqer\BolRetailerV10\Client;
+use Picqer\BolRetailerV10\Model\Order;
 
 class BolServiceTest extends TestCase
 {

@@ -4,7 +4,7 @@ namespace HomeDesignShops\LaravelBolComRetailer;
 
 use HomeDesignShops\LaravelBolComRetailer\Facades\Bol;
 use Illuminate\Support\ServiceProvider;
-use Picqer\BolRetailerV8\Client;
+use Picqer\BolRetailerV10\Client;
 
 class BolComRetailerServiceProvider extends ServiceProvider
 {

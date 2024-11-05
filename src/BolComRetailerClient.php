@@ -4,21 +4,21 @@ namespace HomeDesignShops\LaravelBolComRetailer;
 
 use HomeDesignShops\LaravelBolComRetailer\Models\Transport;
 use Illuminate\Support\Collection;
-use Picqer\BolRetailerV8\Client;
-use Picqer\BolRetailerV8\Exception\ConnectException;
-use Picqer\BolRetailerV8\Exception\Exception;
-use Picqer\BolRetailerV8\Exception\RateLimitException;
-use Picqer\BolRetailerV8\Exception\ResponseException;
-use Picqer\BolRetailerV8\Exception\UnauthorizedException;
-use Picqer\BolRetailerV8\Model\Order;
-use Picqer\BolRetailerV8\Model\OrderOrderItem;
-use Picqer\BolRetailerV8\Model\ProcessStatus;
-use Picqer\BolRetailerV8\Model\ReducedOrder;
-use Picqer\BolRetailerV8\Model\RetailerOffer;
-use Picqer\BolRetailerV8\Model\ShipmentRequest;
-use Picqer\BolRetailerV8\Model\ShipmentTransport;
-use Picqer\BolRetailerV8\Model\UpdateOfferRequest;
-use Picqer\BolRetailerV8\Model\UpdateOfferStockRequest;
+use Picqer\BolRetailerV10\Client;
+use Picqer\BolRetailerV10\Model\OrderOrderItem;
+use Picqer\BolRetailerV10\Model\ReducedOrder;
+use Picqer\BolRetailerV10\Model\RetailerOffer;
+use Picqer\BolRetailerV10\Model\ShipmentRequest;
+use Picqer\BolRetailerV10\Model\ShipmentTransport;
+use Picqer\BolRetailerV10\Model\UpdateOfferRequest;
+use Picqer\BolRetailerV10\Model\UpdateOfferStockRequest;
+use Picqer\BolRetailerV10\Exception\ConnectException;
+use Picqer\BolRetailerV10\Exception\Exception;
+use Picqer\BolRetailerV10\Exception\RateLimitException;
+use Picqer\BolRetailerV10\Exception\ResponseException;
+use Picqer\BolRetailerV10\Exception\UnauthorizedException;
+use Picqer\BolRetailerV10\Model\ProcessStatus;
+use Picqer\BolRetailerV10\Model\Order;
 
 class BolComRetailerClient
 {
@@ -108,7 +108,7 @@ class BolComRetailerClient
     public function shipOrderItem(OrderOrderItem $orderItem, Transport $transport): ?ProcessStatus
     {
         $shipmentRequest = new ShipmentRequest();
-        $shipmentRequest->addOrderItemId($orderItem->orderItemId);
+        $shipmentRequest->orderItems = [$orderItem];
         $shipmentRequest->shipmentReference = $transport->shipmentReference;
 
         $shipmentTransport = new ShipmentTransport();
@@ -120,7 +120,7 @@ class BolComRetailerClient
         $shipmentRequest->transport = $shipmentTransport;
 
         try {
-            return $this->bolClient->shipOrderItem($shipmentRequest);
+            return $this->bolClient->createShipment($shipmentRequest);
 
         } catch (RateLimitException $e) {
             $this->retriesCount++;

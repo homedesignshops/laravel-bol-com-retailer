@@ -4,15 +4,15 @@ namespace HomeDesignShops\LaravelBolComRetailer;
 
 use HomeDesignShops\LaravelBolComRetailer\Models\Transport;
 use Illuminate\Support\Collection;
-use Picqer\BolRetailerV8\Exception\ConnectException;
-use Picqer\BolRetailerV8\Exception\Exception;
-use Picqer\BolRetailerV8\Exception\RateLimitException;
-use Picqer\BolRetailerV8\Exception\ResponseException;
-use Picqer\BolRetailerV8\Exception\UnauthorizedException;
-use Picqer\BolRetailerV8\Model\Order;
-use Picqer\BolRetailerV8\Model\OrderOrderItem;
-use Picqer\BolRetailerV8\Model\ProcessStatus;
-use Picqer\BolRetailerV8\Model\RetailerOffer;
+use Picqer\BolRetailerV10\Exception\ConnectException;
+use Picqer\BolRetailerV10\Exception\Exception;
+use Picqer\BolRetailerV10\Exception\RateLimitException;
+use Picqer\BolRetailerV10\Exception\ResponseException;
+use Picqer\BolRetailerV10\Exception\UnauthorizedException;
+use Picqer\BolRetailerV10\Model\Order;
+use Picqer\BolRetailerV10\Model\OrderOrderItem;
+use Picqer\BolRetailerV10\Model\ProcessStatus;
+use Picqer\BolRetailerV10\Model\RetailerOffer;
 
 /**
  * @method Collection getOpenOrders()
