@@ -10,13 +10,13 @@ use Picqer\BolRetailerV10\Exception\RateLimitException;
 use Picqer\BolRetailerV10\Exception\ResponseException;
 use Picqer\BolRetailerV10\Exception\UnauthorizedException;
 use Picqer\BolRetailerV10\Model\Order;
-use Picqer\BolRetailerV10\Model\OrderOrderItem;
+use Picqer\BolRetailerV10\Model\OrderItem;
 use Picqer\BolRetailerV10\Model\ProcessStatus;
 use Picqer\BolRetailerV10\Model\RetailerOffer;
 
 /**
  * @method Collection getOpenOrders()
- * @method ProcessStatus shipOrderItem(OrderOrderItem $orderItem, Transport $transport)
+ * @method ProcessStatus shipOrderItem(OrderItem $orderItem, Transport $transport)
  * @method Order|null getOrder(string $orderId)
  * @method RetailerOffer|null getOffer(string $offerId)
  * @method ProcessStatus|null updateOffer(RetailerOffer $offer)

@@ -5,7 +5,7 @@ namespace HomeDesignShops\LaravelBolComRetailer;
 use HomeDesignShops\LaravelBolComRetailer\Models\Transport;
 use Illuminate\Support\Collection;
 use Picqer\BolRetailerV10\Client;
-use Picqer\BolRetailerV10\Model\OrderOrderItem;
+use Picqer\BolRetailerV10\Model\OrderItem;
 use Picqer\BolRetailerV10\Model\ReducedOrder;
 use Picqer\BolRetailerV10\Model\RetailerOffer;
 use Picqer\BolRetailerV10\Model\ShipmentRequest;
@@ -105,7 +105,7 @@ class BolComRetailerClient
      * @return ProcessStatus|null
      * @throws RateLimitException
      */
-    public function shipOrderItem(OrderOrderItem $orderItem, Transport $transport): ?ProcessStatus
+    public function shipOrderItem(OrderItem $orderItem, Transport $transport): ?ProcessStatus
     {
         $shipmentRequest = new ShipmentRequest();
         $shipmentRequest->orderItems = [$orderItem];

@@ -6,8 +6,11 @@ use HomeDesignShops\LaravelBolComRetailer\BolComRetailerClient;
 use HomeDesignShops\LaravelBolComRetailer\BolComRetailerService;
 use HomeDesignShops\LaravelBolComRetailer\BolConfig;
 use HomeDesignShops\LaravelBolComRetailer\BolService;
+use HomeDesignShops\LaravelBolComRetailer\Models\Transport;
 use Picqer\BolRetailerV10\Client;
 use Picqer\BolRetailerV10\Model\Order;
+use Picqer\BolRetailerV10\Model\OrderItem;
+use Picqer\BolRetailerV10\Model\ProcessStatus;
 
 class BolServiceTest extends TestCase
 {
@@ -57,6 +60,28 @@ class BolServiceTest extends TestCase
         $order = $bolService->findOrder('1043946570', array_key_first($bolService->retailers()));
 
         $this->assertInstanceOf(Order::class, $order);
+    }
+
+    /**
+     * @test
+     */
+    public function it_ships_an_order()
+    {
+        $bolService = new BolService();
+
+        $bolService->loadFromConfig(new BolConfig());
+
+        $order = $bolService->findOrder('1043946570', array_key_first($bolService->retailers()));
+
+        $transport = new Transport('TRUNKRS', '421401239', '12345678');
+
+        $orderItem = new OrderItem();
+        $orderItem->orderItemId = $order->orderItems[0]->orderItemId;
+        $orderItem->quantity = $order->orderItems[0]->quantity;
+
+        $processStatus = $bolService->retailers()['BOL_NL']->shipOrderItem($orderItem, $transport);
+
+        $this->assertInstanceOf(ProcessStatus::class, $processStatus);
     }
 
     /**
