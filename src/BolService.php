@@ -76,7 +76,7 @@ class BolService
 
         throw_if((!$bolOrder || !method_exists($bolOrder, 'toArray')), new \Exception("Order {$orderId} not found for retailer {$retailerCode}"));
 
-        return new \HomeDesignShops\LaravelBolComRetailer\Models\Order($retailerCode, $bolOrder->toArray(false));
+        return new \HomeDesignShops\LaravelBolComRetailer\Models\Order($retailerCode, $bolOrder->toArray());
     }
 
     protected function findOrderForRetailer(string $orderId, string $retailerCode): ?Order
