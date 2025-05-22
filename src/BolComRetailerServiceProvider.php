@@ -3,6 +3,7 @@
 namespace HomeDesignShops\LaravelBolComRetailer;
 
 use Illuminate\Support\ServiceProvider;
+use Throwable;
 
 class BolComRetailerServiceProvider extends ServiceProvider
 {
@@ -59,7 +60,7 @@ class BolComRetailerServiceProvider extends ServiceProvider
 
             try {
                 return new BolComRetailerService($config['client_id'], $config['client_secret'], $config['use_demo_mode']);
-            } catch (\Exception $e) {
+            } catch (Throwable $e) {
                 report($e);
                 return null;
             }
